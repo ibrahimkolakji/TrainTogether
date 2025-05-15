@@ -1,5 +1,6 @@
 const db = require("../connect.js"); // sqlite3-Verbindung
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); // JWT für Authentifizierung
 
 const register = (req, res) => { // Check if username and email are provided
     const q = "SELECT * FROM users WHERE username = ?"; // Check if username already exists
@@ -31,20 +32,17 @@ const login = (req, res) => {
         const isPasswordCorrect = bcrypt.compareSync(req.body.password, row.password);
         if (!isPasswordCorrect) return res.status(400).json("Wrong password or username");
 
-        // ✅ Session speichern
-        req.session.userId = row.id;
-        req.session.username = row.username;
+        const token = jwt.sign({ id : row.id },"secretkey");
 
-        res.status(200).json({
-            message: "Login erfolgreich",
-            user: { id: row.id, username: row.username }
-        });
+        const { password, ...others } = row; // Exclude the password from the user object
+        res.cookie("access_token", token, {
+            httpOnly: true,
+        }).status(200).json({others}); // Send the user data back to the client
     });
 };
 
 
 const logout = (req, res)=>{
-
+ 
 }
-
 module.exports = { login, register, logout };

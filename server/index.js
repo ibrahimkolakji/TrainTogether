@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('express-session'); // FEHLT BEI DIR NOCH
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -13,26 +12,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-
-// CORS + Cookies zulassen
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
-
+app.use(cors());
 app.use(cookieParser());
 
-// SESSION-Middleware aktivieren
-app.use(session({
-  secret: 'deinGeheimerSessionKey123',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: false,       // true nur bei HTTPS
-    maxAge: 1000 * 60 * 60 // 1 Stunde
-  }
-}));
+
 
 // Routen einbinden
 app.use("/api/auth", authRoutes);
