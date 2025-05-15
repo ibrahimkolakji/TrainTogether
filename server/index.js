@@ -1,0 +1,47 @@
+const express = require('express');
+const session = require('express-session'); // FEHLT BEI DIR NOCH
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+
+const authRoutes = require('./routes/auth.js');
+const userRoutes = require('./routes/users.js');
+const postRoutes = require('./routes/posts.js');
+const commentRoutes = require('./routes/comments.js');
+const dabeiButtonRoutes = require('./routes/dabeiButton.js');
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+
+// CORS + Cookies zulassen
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
+app.use(cookieParser());
+
+// SESSION-Middleware aktivieren
+app.use(session({
+  secret: 'deinGeheimerSessionKey123',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,       // true nur bei HTTPS
+    maxAge: 1000 * 60 * 60 // 1 Stunde
+  }
+}));
+
+// Routen einbinden
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/dabeiButtons", dabeiButtonRoutes);
+
+// Server starten
+app.listen(8800, () => {
+  console.log("API Working on http://localhost:8800");
+});
