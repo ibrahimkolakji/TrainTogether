@@ -22,7 +22,6 @@ const register = (req, res) => { // Check if username and email are provided
 
 module.exports = { register };
 
-
 const login = (req, res) => {
     const q = "SELECT * FROM users WHERE username = ?";
     db.get(q, [req.body.username], (err, row) => {
@@ -39,10 +38,13 @@ const login = (req, res) => {
             httpOnly: true,
         }).status(200).json({others}); // Send the user data back to the client
     });
-};
+}; 
 
 
 const logout = (req, res)=>{
- 
-}
+    res.clearCookie("access_token", {
+        sameSite: "none",
+        secure: true
+    }).status(200).json("User has been logged out"); // Clear the cookie and send a response 
+};
 module.exports = { login, register, logout };
