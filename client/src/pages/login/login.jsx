@@ -1,9 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./login.scss";
-import login from "../../assets/sign_login.jpg";
+import loginBild from "../../assets/sign_login.jpg";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
+import { useState } from "react";
 
 const Login = () => {
+    
+      const [inputs, setInputs] = useState({
+        username: "",
+        password: "",
+      });
+    
+      const [err, setErr] = useState(null);
+    
+      const handlechange = (e) => {
+        setInputs((prev) => ({
+          ...prev,
+          [e.target.name]: e.target.value,
+        }));
+      };
+    const {login} = useContext(AuthContext);
+ 
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            await login(inputs);
+        }catch (err) {
+            setErr(err.response.data);
+        }
+        
+    }
+     
     return (
         <div className="login-container">
         {/* Left Panel */}
@@ -12,10 +41,12 @@ const Login = () => {
             <h2 className="login-title">Welcome Back👋 </h2>
             <form>
                 <div className="login-field">
-                <label>Email address</label>
+                <label>Username</label>
                 <input
-                    type="email"
-                    placeholder="Enter your email"
+                    type="text"
+                    placeholder="Enter your Username"
+                    name="username"
+                    onChange={handlechange}
                 />
                 </div>
                 <div className="login-field">
@@ -23,11 +54,15 @@ const Login = () => {
                 <input
                     type="password"
                     placeholder="*******"
+                    name="password"
+                    onChange={handlechange}
                 />
                 </div>
+                {err && <span className="error-message">{err}</span>}
                 <button
                 type="submit"
                 className="login-btn"
+                onClick = {handleLogin}
                 >
                 Login
                 </button>
@@ -50,7 +85,7 @@ const Login = () => {
         {/* Right Panel */}
         <div className="login-right">
             <img
-            src={ login}
+            src={ loginBild }
             alt="login"
             />
         </div>

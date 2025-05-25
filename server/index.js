@@ -11,22 +11,30 @@ const dabeiButtonRoutes = require('./routes/dabeiButton.js');
 const app = express();
 
 // Middleware
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+
+// Setze Access-Control-Allow-Credentials explizit
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use(express.json());
-app.use(cors());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("API ist erreichbar.");
 });
 
-// Routen einbinden
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/dabeiButtons", dabeiButtonRoutes);
 
-// Server starten
 app.listen(8800, () => {
   console.log("API Working on http://localhost:8800");
 });

@@ -101,6 +101,7 @@ body, html {
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 10px;
+  margin-top: 16px;
   cursor: pointer;
   transition: background 0.2s;
   letter-spacing: 0.5px;
@@ -210,4 +211,15 @@ body, html {
     height: 100%; // Bild nimmt volle Panelhöhe
     max-height: none;
   }
+}
+.error-message {
+  color: #d93025; // Google-Error-Rot
+  background-color: #fbeaea;
+  border: 1px solid #d93025;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 38px; // noch mehr Abstand nach oben
+  margin-bottom: 4px; // weniger Abstand nach unten
+  font-size: 0.95rem;
+  text-align: center;
 }

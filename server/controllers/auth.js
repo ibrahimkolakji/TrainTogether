@@ -36,7 +36,7 @@ const login = (req, res) => {
         const { password, ...others } = row; // Exclude the password from the user object
         res.cookie("access_token", token, {
             httpOnly: true,
-        }).status(200).json({others}); // Send the user data back to the client
+        }).status(200).json(others); // Send the user data back to the client
     });
 }; 
 

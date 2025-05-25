@@ -1,9 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./register.scss";
 import login from "../../assets/sign_login.jpg";
-
+import axios from "axios";
 const Register = () => {
+  const [inputs, setInputs] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [err, setErr] = useState(null);
+
+  const handlechange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:8800/api/auth/register", inputs);
+    } catch (err) {
+      setErr(err.response.data);
+    }
+  };
+
+  console.log(err);
   return (
     <div className="register-container">
       {/* Left Panel */}
@@ -16,6 +42,8 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="Enter a username"
+                name="username"
+                onChange={handlechange}
               />
             </div>
             <div className="register-field">
@@ -23,6 +51,8 @@ const Register = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
+                name="email"
+                onChange={handlechange}
               />
             </div>
             <div className="register-field">
@@ -30,11 +60,16 @@ const Register = () => {
               <input
                 type="password"
                 placeholder="*******"
+                name="password"
+                onChange={handlechange}
               />
             </div>
+            {err && <span className="error-message">{err}</span>}
+            {/* Submit Button */}
             <button
               type="submit"
               className="register-btn"
+              onClick={handleClick}
             >
               Signup
             </button>
@@ -56,10 +91,7 @@ const Register = () => {
       </div>
       {/* Right Panel */}
       <div className="register-right">
-        <img
-          src={ login}
-          alt="login"
-        />
+        <img src={login} alt="login" />
       </div>
     </div>
   );
